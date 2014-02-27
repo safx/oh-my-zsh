@@ -81,3 +81,6 @@ export PATH="/usr/local/heroku/bin:$PATH"
 
 # Docker
 export DOCKER_HOST=tcp://127.0.0.1:4243
+
+# activate autojump
+autoload -U compinit && compinit
