@@ -55,6 +55,8 @@ source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
+setopt printexitvalue
+
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 export PATH=$HOME/Library/Haskell/bin:/usr/local/share/npm/bin:$PATH
 # export MANPATH="/usr/local/man:$MANPATH"
