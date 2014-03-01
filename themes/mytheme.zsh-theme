@@ -1,30 +1,112 @@
-# https://github.com/blinks zsh theme
+# oh-my-zsh Bureau Theme
 
-function _prompt_char() {
-  if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
-    echo "%{%F{blue}%}$%{%f%k%b%}"
-  else
-    echo '$'
-  fi
+### NVM
+
+ZSH_THEME_NVM_PROMPT_PREFIX="%B⬡%b "
+ZSH_THEME_NVM_PROMPT_SUFFIX=""
+
+### Git [±master ▾●]
+
+ZSH_THEME_GIT_PROMPT_PREFIX="[%{$fg[green]%}±%{$reset_color%}%{$fg[white]%}"
+ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%}]"
+ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg_bold[green]%}✓%{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_AHEAD="%{$fg[cyan]%}▴%{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_BEHIND="%{$fg[magenta]%}▾%{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_STAGED="%{$fg_bold[green]%}●%{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_UNSTAGED="%{$fg_bold[yellow]%}●%{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg_bold[red]%}●%{$reset_color%}"
+
+bureau_git_branch () {
+  ref=$(command git symbolic-ref HEAD 2> /dev/null) || \
+  ref=$(command git rev-parse --short HEAD 2> /dev/null) || return
+  echo "${ref#refs/heads/}"
 }
 
-# This theme works with both the "dark" and "light" variants of the
-# Solarized color schema.  Set the SOLARIZED_THEME variable to one of
-# these two values to choose.  If you don't specify, we'll assume you're
-# using the "dark" variant.
+bureau_git_status () {
+  _INDEX=$(command git status --porcelain -b 2> /dev/null)
+  _STATUS=""
+  if $(echo "$_INDEX" | grep '^[AMRD]. ' &> /dev/null); then
+    _STATUS="$_STATUS$ZSH_THEME_GIT_PROMPT_STAGED"
+  fi
+  if $(echo "$_INDEX" | grep '^.[MTD] ' &> /dev/null); then
+    _STATUS="$_STATUS$ZSH_THEME_GIT_PROMPT_UNSTAGED"
+  fi
+  if $(echo "$_INDEX" | grep -E '^\?\? ' &> /dev/null); then
+    _STATUS="$_STATUS$ZSH_THEME_GIT_PROMPT_UNTRACKED"
+  fi
+  if $(echo "$_INDEX" | grep '^UU ' &> /dev/null); then
+    _STATUS="$_STATUS$ZSH_THEME_GIT_PROMPT_UNMERGED"
+  fi
+  if $(command git rev-parse --verify refs/stash >/dev/null 2>&1); then
+    _STATUS="$_STATUS$ZSH_THEME_GIT_PROMPT_STASHED"
+  fi
+  if $(echo "$_INDEX" | grep '^## .*ahead' &> /dev/null); then
+    _STATUS="$_STATUS$ZSH_THEME_GIT_PROMPT_AHEAD"
+  fi
+  if $(echo "$_INDEX" | grep '^## .*behind' &> /dev/null); then
+    _STATUS="$_STATUS$ZSH_THEME_GIT_PROMPT_BEHIND"
+  fi
+  if $(echo "$_INDEX" | grep '^## .*diverged' &> /dev/null); then
+    _STATUS="$_STATUS$ZSH_THEME_GIT_PROMPT_DIVERGED"
+  fi
 
-case ${SOLARIZED_THEME:-dark} in
-    light) bkg=white;;
-    *)     bkg=black;;
-esac
+  echo $_STATUS
+}
 
-ZSH_THEME_GIT_PROMPT_PREFIX=" [%{%B%F{blue}%}"
-ZSH_THEME_GIT_PROMPT_SUFFIX="%{%f%k%b%K{${bkg}}%B%F{green}%}]"
-ZSH_THEME_GIT_PROMPT_DIRTY=" %{%F{red}%}*%{%f%k%b%}"
-ZSH_THEME_GIT_PROMPT_CLEAN=""
+bureau_git_prompt () {
+  local _branch=$(bureau_git_branch)
+  local _status=$(bureau_git_status)
+  local _result=""
+  if [[ "${_branch}x" != "x" ]]; then
+    _result="$ZSH_THEME_GIT_PROMPT_PREFIX$_branch"
+    if [[ "${_status}x" != "x" ]]; then
+      _result="$_result $_status"
+    fi
+    _result="$_result$ZSH_THEME_GIT_PROMPT_SUFFIX"
+  fi
+  echo $_result
+}
 
-PROMPT='%{%f%k%b%}
-%{%K{${bkg}}%B%F{green}%}%n%{%B%F{blue}%}@%{%B%F{cyan}%}%m%{%B%F{green}%} %{%b%F{yellow}%K{${bkg}}%}%~%{%B%F{green}%}$(git_prompt_info)%E%{%f%k%b%}
-%{%K{${bkg}}%}$(_prompt_char)%{%K{${bkg}}%} '
 
-RPROMPT='!%{%B%F{cyan}%}%!%{%f%k%b%}'
+_PATH="%{$fg[green]%}%~%{$reset_color%}"
+
+if [[ "%#" == "#" ]]; then
+  _USERNAME="%{$fg_bold[red]%}%n"
+  _LIBERTY="%{$fg[red]%}#"
+else
+  _USERNAME="%{$fg[gray]%}%n"
+  _LIBERTY="%{$fg[green]%}$"
+fi
+_USERNAME="$_USERNAME%{$reset_color%}@%m"
+_LIBERTY="$_LIBERTY%{$reset_color%}"
+
+
+get_space () {
+  local STR=$1$2
+  local zero='%([BSUbfksu]|([FB]|){*})'
+  local LENGTH=${#${(S%%)STR//$~zero/}} 
+  local SPACES=""
+  (( LENGTH = ${COLUMNS} - $LENGTH - 1))
+  
+  for i in {0..$LENGTH}
+    do
+      SPACES="$SPACES "
+    done
+
+  echo $SPACES
+}
+
+_1LEFT="$_USERNAME $_PATH"
+#_1RIGHT="[%*] "
+
+bureau_precmd () {
+  echo
+}
+
+setopt prompt_subst
+PROMPT='$_1LEFT$_1SPACES$_1RIGHT $(bureau_git_prompt)
+$_LIBERTY '
+#RPROMPT='$(nvm_prompt_info) $(bureau_git_prompt)'
+
+autoload -U add-zsh-hook
+add-zsh-hook precmd bureau_precmd
