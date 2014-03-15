@@ -5,27 +5,6 @@ ZSH=$HOME/.oh-my-zsh
 # Look in ~/.oh-my-zsh/themes/
 ZSH_THEME="mytheme"
 
-
-# Example aliases
-alias m='make'
-alias e='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient --no-wait'
-alias ls='ls -F'
-alias ll='ls -lF'
-alias la='ls -a'
-alias cp='cp -i'
-alias mv='mv -i'
-alias rm='rm -i'
-alias sl=ls
-alias ssh='ssh -X'
-alias od='od -t x1 -v'
-alias lv=less
-alias 7z='~/7z'
-alias unrar='~/unrar'
-alias f='open -a Finder'
-alias hg='/Applications/SourceTree.app/Contents/Resources/mercurial_local/hg_local'
-alias mp='/Applications/MPlayerX.app/Contents/Resources/binaries/x86_64/mplayer'
-alias cv='$HOME/Applications/cooViewer.app/Contents/MacOS/cooViewer'
-
 # Set to this to use case-sensitive completion
 # CASE_SENSITIVE="true"
 
@@ -81,8 +60,31 @@ eval "$(gulp --completion=zsh)"
 # Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
 
+# Go
+export PATH="/usr/local/go/bin:$PATH"
+
 # Docker
 export DOCKER_HOST=tcp://127.0.0.1:4243
 
 # activate autojump
 autoload -U compinit && compinit
+
+# Example aliases
+alias m='make'
+alias e='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient --no-wait'
+alias ls='ls -F'
+alias ll='ls -lF'
+alias la='ls -a'
+alias cp='cp -i'
+alias mv='mv -i'
+alias rm='rm -i'
+alias sl=ls
+alias ssh='ssh -X'
+alias od='od -t x1 -v'
+alias lv=less
+alias 7z='~/7z'
+alias unrar='~/unrar'
+alias f='open -a Finder'
+alias hg='/Applications/SourceTree.app/Contents/Resources/mercurial_local/hg_local'
+alias mp='/Applications/MPlayerX.app/Contents/Resources/binaries/x86_64/mplayer'
+alias cv='$HOME/Applications/cooViewer.app/Contents/MacOS/cooViewer'
