@@ -1,3 +1,5 @@
+export LANG=ja_JP.UTF-8
+
 # Path to your oh-my-zsh configuration.
 ZSH=$HOME/.oh-my-zsh
 
@@ -61,7 +63,11 @@ eval "$(gulp --completion=zsh)"
 export PATH="/usr/local/heroku/bin:$PATH"
 
 # Go
-export PATH="/usr/local/go/bin:$PATH"
+#export GOROOT=/usr/local/go
+export GOROOT=/usr/local/Cellar/go/1.3.1/libexec
+export GOPATH=$HOME/dev/golang
+export PATH="$GOROOT/bin:$PATH"
+
 
 # Docker
 export DOCKER_HOST=tcp://127.0.0.1:4243
@@ -71,7 +77,7 @@ autoload -U compinit && compinit
 
 # Example aliases
 alias m='make'
-alias e='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient --no-wait'
+alias e='~/Applications/Emacs.app/Contents/MacOS/bin/emacsclient --no-wait'
 alias ls='ls -F'
 alias ll='ls -lF'
 alias la='ls -a'
@@ -82,9 +88,11 @@ alias sl=ls
 alias ssh='ssh -X'
 alias od='od -t x1 -v'
 alias lv=less
+alias md5='md5sum'
 alias 7z='~/7z'
 alias unrar='~/unrar'
 alias f='open -a Finder'
 alias hg='/Applications/SourceTree.app/Contents/Resources/mercurial_local/hg_local'
-alias mp='/Applications/MPlayerX.app/Contents/Resources/binaries/x86_64/mplayer'
+alias mp='$HOME/Applications/mpv.app/Contents/MacOS/mpv'
 alias cv='$HOME/Applications/cooViewer.app/Contents/MacOS/cooViewer'
+alias gob="$GOROOT/bin/go build -gcflags '-N -l'"
