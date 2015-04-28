@@ -75,7 +75,7 @@ export DOCKER_HOST=tcp://127.0.0.1:4243
 # activate autojump
 autoload -U compinit && compinit
 
-# Example aliases
+# aliases
 alias m='make'
 alias e='~/Applications/Emacs.app/Contents/MacOS/bin/emacsclient --no-wait'
 alias ls='ls -F'
@@ -96,3 +96,9 @@ alias hg='/Applications/SourceTree.app/Contents/Resources/mercurial_local/hg_loc
 alias mp='$HOME/Applications/mpv.app/Contents/MacOS/mpv'
 alias cv='$HOME/Applications/cooViewer.app/Contents/MacOS/cooViewer'
 alias gob="$GOROOT/bin/go build -gcflags '-N -l'"
+
+# git aliases
+alias gs="git status"
+alias gl="git log"
+alias ga="git add"
+alias gd="git diff"
