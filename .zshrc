@@ -64,7 +64,7 @@ export PATH="/usr/local/heroku/bin:$PATH"
 
 # Go
 #export GOROOT=/usr/local/go
-export GOROOT=/usr/local/Cellar/go/1.3.1/libexec
+export GOROOT=/usr/local/go
 export GOPATH=$HOME/dev/golang
 export PATH="$GOROOT/bin:$PATH"
 
