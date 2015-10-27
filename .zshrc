@@ -30,7 +30,7 @@ DISABLE_CORRECTION="true"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(brew autojump cabal docker git npm pod vagrant xcode)
+plugins=(brew autojump cabal docker gem git pod xcode)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -88,9 +88,9 @@ alias rm='rm -i'
 alias sl=ls
 alias ssh='ssh -X'
 alias od='od -t x1 -v'
+alias l=less
 alias lv=less
-alias md5='md5sum'
-alias 7z='~/7z'
+which md5sum > /dev/null && alias md5='md5sum'
 alias unrar='~/unrar'
 alias f='open -a Finder'
 #alias hg='/Applications/SourceTree.app/Contents/Resources/mercurial_local/hg_local'
