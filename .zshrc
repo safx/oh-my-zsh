@@ -122,4 +122,11 @@ function cdd {
     fi
 }
 
+function sshh {
+    local host=$(grep "Host " ~/.ssh/config | grep -v '*' | cut -b 6- | peco)
+    if [ -n "$host" ]; then
+        ssh "$host"
+    fi
+}
+
 source ~/.zshrc.local
