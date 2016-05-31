@@ -73,6 +73,9 @@ export PATH="$GOROOT/bin:$PATH"
 # Docker
 export DOCKER_HOST=tcp://127.0.0.1:4243
 
+# OCaml
+. /Users/safx/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+
 # activate autojump
 autoload -U compinit && compinit
 
@@ -99,9 +102,24 @@ alias cv='$HOME/Applications/cooViewer.app/Contents/MacOS/cooViewer'
 alias gob="$GOROOT/bin/go build -gcflags '-N -l'"
 
 # git aliases
-alias gs="git status"
-alias gl="git log"
-alias ga="git add"
 alias gd="git diff"
 alias gds="git diff --staged"
 alias gg="git grep"
+alias gl="git log"
+alias gs="git status"
+
+function gge {
+    local file=$(git grep -n $@ | peco | awk -F: '{print $1}')
+    if [ ! -z "$file" ] ; then
+        ~/Applications/Emacs.app/Contents/MacOS/bin/emacsclient --no-wait "$file"
+    fi
+}
+
+function cdd {
+    local dir=$(find . -type  d \! -iwholename '*/.git/*' -and \! -name . | cut -c 3- | peco --select-1 --initial-index 1| awk -F: '{print $1}')
+    if [ ! -z "$dir" ] ; then
+        cd "$dir"
+    fi
+}
+
+source ~/.zshrc.local
