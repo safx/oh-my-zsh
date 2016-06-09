@@ -109,9 +109,12 @@ alias gl="git log"
 alias gs="git status"
 
 function gge {
-    local file=$(git grep -n $@ | peco | awk -F: '{print $1}')
-    if [ ! -z "$file" ] ; then
-        ~/Applications/Emacs.app/Contents/MacOS/bin/emacsclient --no-wait "$file"
+    local sel="$(git grep -n $@ | peco)"
+    local xs
+    if [ ! -z "$sel" ] ; then
+        xs=("${(@s/:/)sel}")  # splitt with `:`
+        e "$xs[1]"
+        e --eval "(with-current-buffer (window-buffer (selected-window)) (goto-line $xs[2]))"
     fi
 }
 
