@@ -108,19 +108,29 @@ alias gg="git grep"
 alias gl="git log"
 alias gs="git status"
 
-function gge {
+function gg {
     local sel="$(git grep -n $@ | peco)"
     local xs
     if [ ! -z "$sel" ] ; then
         xs=("${(@s/:/)sel}")  # splitt with `:`
+        echo "$xs[1]"
         e "$xs[1]"
         e --eval "(with-current-buffer (window-buffer (selected-window)) (goto-line $xs[2]))"
     fi
 }
 
+function ff {
+    local file="$(find . -type f \! -iwholename '*/.git/*' -and -name \*$1\* | cut -c 3- | peco --select-1 --initial-index 1 | awk -F: '{print $1}')"
+    if [ ! -z "$file" ] ; then
+        echo "$file"
+        e "$file"
+    fi
+}
+
 function cdd {
-    local dir=$(find . -type  d \! -iwholename '*/.git/*' -and \! -name . | cut -c 3- | peco --select-1 --initial-index 1| awk -F: '{print $1}')
+    local dir=$(find . -type d \! -iwholename '*/.git/*' -and \! -name . | cut -c 3- | peco --select-1 --initial-index 1 | awk -F: '{print $1}')
     if [ ! -z "$dir" ] ; then
+        cd "$dir"
         cd "$dir"
     fi
 }
@@ -128,6 +138,7 @@ function cdd {
 function sshh {
     local host=$(grep "Host " ~/.ssh/config | grep -v '*' | cut -b 6- | peco)
     if [ -n "$host" ]; then
+        cd "$host"
         ssh "$host"
     fi
 }
