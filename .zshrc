@@ -108,6 +108,17 @@ alias gg="git grep"
 alias gl="git log"
 alias gs="git status"
 
+function agg {
+    local sel="$(ag $@ | peco)"
+    local xs
+    if [ ! -z "$sel" ] ; then
+        xs=("${(@s/:/)sel}")  # splitt with `:`
+        echo "$xs[1]"
+        e "$xs[1]"
+        e --eval "(with-current-buffer (window-buffer (selected-window)) (goto-line $xs[2]))"
+    fi
+}
+
 function gg {
     local sel="$(git grep -n $@ | peco)"
     local xs
