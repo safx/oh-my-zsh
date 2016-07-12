@@ -86,6 +86,7 @@ alias ls='ls -F'
 alias ll='ls -lF'
 alias la='ls -a'
 alias cp='cp -i'
+alias ca=carthage
 alias mv='mv -i'
 alias rm='rm -i'
 alias sl=ls
@@ -104,11 +105,11 @@ alias gob="$GOROOT/bin/go build -gcflags '-N -l'"
 # git aliases
 alias gd="git diff"
 alias gds="git diff --staged"
-alias gg="git grep"
+#alias gg="git grep"
 alias gl="git log"
 alias gs="git status"
 
-function agg {
+function a {
     local sel="$(ag $@ | peco)"
     local xs
     if [ ! -z "$sel" ] ; then
