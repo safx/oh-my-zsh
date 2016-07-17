@@ -103,11 +103,15 @@ alias cv='$HOME/Applications/cooViewer.app/Contents/MacOS/cooViewer'
 alias gob="$GOROOT/bin/go build -gcflags '-N -l'"
 
 # git aliases
-alias gd="git diff"
-alias gds="git diff --staged"
-#alias gg="git grep"
 alias gl="git log"
 alias gs="git status"
+if ( where diff-so-fancy ) ; then
+    alias gd="git diff --color | diff-so-fancy | less -RFX"
+    alias gds="git diff --staged --color | diff-so-fancy | less -RFX"
+else
+    alias gd="git diff"
+    alias gds="git diff --staged"
+fi
 
 function a {
     local sel="$(ag $@ | peco)"
