@@ -91,7 +91,7 @@ alias mv='mv -i'
 alias rm='rm -i'
 alias sl=ls
 alias ssh='ssh -X'
-alias od='od -t x1 -v'
+alias od='od -Ax -t x1 -v'
 alias l=less
 alias lv=less
 which md5sum > /dev/null && alias md5='md5sum'
@@ -126,6 +126,17 @@ function a {
 
 function gg {
     local sel="$(git grep -n $@ | peco)"
+    local xs
+    if [ ! -z "$sel" ] ; then
+        xs=("${(@s/:/)sel}")  # splitt with `:`
+        echo "$xs[1]"
+        e "$xs[1]"
+        e --eval "(with-current-buffer (window-buffer (selected-window)) (goto-line $xs[2]))"
+    fi
+}
+
+function gse {
+    local sel="$(git status $@ | peco)"
     local xs
     if [ ! -z "$sel" ] ; then
         xs=("${(@s/:/)sel}")  # splitt with `:`
