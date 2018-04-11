@@ -41,6 +41,8 @@ setopt printexitvalue
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 export PATH=/usr/local/share/npm/bin:$PATH
 export PATH=$HOME/.gem/ruby/2.0.0/bin:$PATH
+export PATH=/usr/local/opt/openssl/bin:$PATH]
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # Key bindings
@@ -56,9 +58,6 @@ export PATH=$HOME/.gem/ruby/2.0.0/bin:$PATH
 
 # ssh
 # export SSH_KEY_PATH="~/.ssh/dsa_id"
-
-# gulp
-eval "$(gulp --completion=zsh)"
 
 # Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
@@ -170,4 +169,4 @@ function sshh {
     fi
 }
 
-source ~/.zshrc.local
+[ -f $HOME/.zshrc.local ] && source $HOME/.zshrc.local
