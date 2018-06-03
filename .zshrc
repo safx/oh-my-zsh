@@ -80,7 +80,7 @@ autoload -U compinit && compinit
 
 # aliases
 alias m='make'
-alias e='~/Applications/Emacs.app/Contents/MacOS/bin/emacsclient --no-wait'
+alias e='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient --no-wait'
 alias ls='ls -F'
 alias ll='ls -lF'
 alias la='ls -a'
