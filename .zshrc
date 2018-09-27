@@ -79,7 +79,9 @@ export DOCKER_HOST=tcp://127.0.0.1:4243
 autoload -U compinit && compinit
 
 # aliases
-alias m='make'
+alias d='docker'
+alias dm='docker-machine'
+alias dc='docker-compose'
 alias e='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient --no-wait'
 alias ls='ls -F'
 alias ll='ls -lF'
@@ -102,8 +104,9 @@ alias cv='$HOME/Applications/cooViewer.app/Contents/MacOS/cooViewer'
 alias gob="$GOROOT/bin/go build -gcflags '-N -l'"
 
 # git aliases
-alias gl="git log"
-alias gs="git status"
+alias gl='git log'
+alias gs='git status -s'
+alias gsx='git status -s | peco | cut -c 4-'
 if ( where diff-so-fancy ) ; then
     alias gd="git diff --color | diff-so-fancy | less -RFX"
     alias gds="git diff --staged --color | diff-so-fancy | less -RFX"
