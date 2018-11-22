@@ -68,13 +68,6 @@ export GOROOT=/usr/local/go
 export GOPATH=$HOME/dev/golang
 export PATH="$GOROOT/bin:$PATH"
 
-
-# Docker
-export DOCKER_HOST=tcp://127.0.0.1:4243
-
-# OCaml
-. /Users/safx/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
-
 # activate autojump
 autoload -U compinit && compinit
 
@@ -87,7 +80,7 @@ alias ls='ls -F'
 alias ll='ls -lF'
 alias la='ls -a'
 alias cp='cp -i'
-alias ca=carthage
+alias c=cargo
 alias mv='mv -i'
 alias rm='rm -i'
 alias sl=ls
@@ -96,12 +89,9 @@ alias od='od -Ax -t x1 -v'
 alias l=less
 alias lv=less
 which md5sum > /dev/null && alias md5='md5sum'
-alias unrar='~/unrar'
 alias f='open -a Finder'
-#alias hg='/Applications/SourceTree.app/Contents/Resources/mercurial_local/hg_local'
 alias mp='$HOME/Applications/mpv.app/Contents/MacOS/mpv'
 alias cv='$HOME/Applications/cooViewer.app/Contents/MacOS/cooViewer'
-alias gob="$GOROOT/bin/go build -gcflags '-N -l'"
 
 # git aliases
 alias gl='git log'
@@ -116,59 +106,41 @@ else
 fi
 
 function a {
-    local sel="$(ag $@ | peco)"
     local xs
-    if [ ! -z "$sel" ] ; then
-        xs=("${(@s/:/)sel}")  # splitt with `:`
-        echo "$xs[1]"
-        e "$xs[1]"
-        e --eval "(with-current-buffer (window-buffer (selected-window)) (goto-line $xs[2]))"
-    fi
-}
-
-function gg {
-    local sel="$(git grep -n $@ | peco)"
-    local xs
-    if [ ! -z "$sel" ] ; then
-        xs=("${(@s/:/)sel}")  # splitt with `:`
-        echo "$xs[1]"
-        e "$xs[1]"
-        e --eval "(with-current-buffer (window-buffer (selected-window)) (goto-line $xs[2]))"
-    fi
+    ag $@ | peco | while read sel; do
+        if [ ! -z "$sel" ] ; then
+            xs=("${(@s/:/)sel}")  # splitt with `:`
+            echo "$xs[1]"
+            e "$xs[1]"
+            e --eval "(with-current-buffer (window-buffer (selected-window)) (goto-line $xs[2]))" > /dev/null
+        fi
+    done
 }
 
 function gse {
-    local sel="$(git status $@ | peco)"
     local xs
-    if [ ! -z "$sel" ] ; then
-        xs=("${(@s/:/)sel}")  # splitt with `:`
-        echo "$xs[1]"
-        e "$xs[1]"
-        e --eval "(with-current-buffer (window-buffer (selected-window)) (goto-line $xs[2]))"
-    fi
+    git status -s $@ | peco | while read sel; do
+        if [ ! -z "$sel" ] ; then
+            xs=("${(@s/ /)sel}")  # splitt with ` `
+            echo "$xs[2]"
+            e "$xs[2]"
+        fi
+    done
 }
 
 function ff {
-    local file="$(find . -type f \! -iwholename '*/.git/*' -and -name \*$1\* | cut -c 3- | peco --select-1 --initial-index 1 | awk -F: '{print $1}')"
-    if [ ! -z "$file" ] ; then
-        echo "$file"
-        e "$file"
-    fi
+    find . -type f \! -iwholename '*/.git/*' -and -name \*$1\* | cut -c 3- | peco --select-1 --initial-index 1 | awk -F: '{print $1}' | while read file ; do
+        if [ ! -z "$file" ] ; then
+            echo "$file"
+            e "$file"
+        fi
+    done
 }
 
 function cdd {
     local dir=$(find . -type d \! -iwholename '*/.git/*' -and \! -name . | cut -c 3- | peco --select-1 --initial-index 1 | awk -F: '{print $1}')
     if [ ! -z "$dir" ] ; then
         cd "$dir"
-        cd "$dir"
-    fi
-}
-
-function sshh {
-    local host=$(grep "Host " ~/.ssh/config | grep -v '*' | cut -b 6- | peco)
-    if [ -n "$host" ]; then
-        cd "$host"
-        ssh "$host"
     fi
 }
 
