@@ -39,11 +39,7 @@ source $ZSH/oh-my-zsh.sh
 setopt printexitvalue
 
 export PATH=$HOME/bin:/usr/local/bin:$PATH
-export PATH=/usr/local/share/npm/bin:$PATH
-export PATH=$HOME/.gem/ruby/2.0.0/bin:$PATH
-export PATH=/usr/local/opt/openssl/bin:$PATH]
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
-# export MANPATH="/usr/local/man:$MANPATH"
+export PATH=/usr/local/opt/openssl/bin:$PATH
 
 # Key bindings
 #stty -istrip
@@ -56,23 +52,16 @@ if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
-# ssh
-# export SSH_KEY_PATH="~/.ssh/dsa_id"
-
-# Added by the Heroku Toolbelt
-export PATH="/usr/local/heroku/bin:$PATH"
-
 # Go
-#export GOROOT=/usr/local/go
-export GOROOT=/usr/local/go
-export GOPATH=$HOME/dev/golang
-export PATH="$GOROOT/bin:$PATH"
-
-# activate autojump
-autoload -U compinit && compinit
+#export GOROOT=/usr/local/opt/go/libexec
+#export GOPATH=$HOME/src/go
+#export GO111MODULE=on
+#export PATH="$GOROOT/bin:$PATH"
 
 # aliases
 alias d='docker'
+alias di='docker image'
+alias dps='docker ps'
 alias dm='docker-machine'
 alias dc='docker-compose'
 alias e='/Applications/Emacs.app/Contents/MacOS/bin/emacsclient --no-wait'
@@ -86,25 +75,30 @@ alias rm='rm -i'
 alias sl=ls
 alias ssh='ssh -X'
 alias od='od -Ax -t x1 -v'
-alias l=less
-alias lv=less
+alias less=bat
 which md5sum > /dev/null && alias md5='md5sum'
 alias f='open -a Finder'
 alias mp='$HOME/Applications/mpv.app/Contents/MacOS/mpv'
 alias cv='$HOME/Applications/cooViewer.app/Contents/MacOS/cooViewer'
+alias gifify='$HOME/.nodenv/versions/10.16.0/lib/node_modules/gifify/bin/gifify'
+alias v=vagrant
+alias aws-azure-login='aws-azure-login --no-prompt --all-profiles'
 
 # git aliases
 alias gl='git log'
+alias gll='git log --graph --oneline'
 alias gs='git status -s'
-alias gsx='git status -s | peco | cut -c 4-'
-if ( where diff-so-fancy ) ; then
-    alias gd="git diff --color | diff-so-fancy | less -RFX"
-    alias gds="git diff --staged --color | diff-so-fancy | less -RFX"
+alias gt='git for-each-ref --sort=committerdate --format="%(committerdate:short) %(refname:short)" refs/tags'
+alias gsp='git status -s | sk | cut -c 4- | pbcopy'
+if ( where diff-so-fancy > /dev/null ) ; then
+    alias gd="git diff --color | diff-so-fancy | \less -RFX"
+    alias gds="git diff --staged --color | diff-so-fancy | \less -RFX"
 else
     alias gd="git diff"
     alias gds="git diff --staged"
 fi
 
+alias ag=rg
 function a {
     local sel xs cmd cmd2
     if [ -z "$1" ] ; then
@@ -174,3 +168,19 @@ function cdd {
 }
 
 [ -f $HOME/.zshrc.local ] && source $HOME/.zshrc.local
+
+export RIPGREP_CONFIG_PATH=$HOME/.rg
+export SKIM_DEFAULT_OPTIONS='--bind="ctrl-q:execute-silent(echo -n {1} | pbcopy)+abort,ctrl-k:kill-word,ctrl-d:delete-char,ctrl-w:backward-kill-word,f1:execute-silent(open -a \"Visual Studio Code\" {1})+abort,ctrl-v:page-down,ctrl-g:page-up,,alt-p:preview-up,alt-n:preview-down,f12:execute-silent(open -a Finder {1})+abort"'
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh" || true
+
+source $HOME/.config/broot/launcher/bash/br
+
+# asdf
+. $HOME/.asdf/asdf.sh
+# append completions to fpath
+fpath=(${ASDF_DIR}/completions $fpath)
+
+# initialise completions with ZSH's compinit
+autoload -Uz compinit
+compinit
