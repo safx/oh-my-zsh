@@ -106,30 +106,59 @@ else
 fi
 
 function a {
-    local xs
-    ag $@ | peco | while read sel; do
+    local sel xs cmd cmd2
+    if [ -z "$1" ] ; then
+        cmd="sk --ansi -i -c 'rg --color=always --line-number \"{}\"' --delimiter ':' --preview \"bat --plain --color=always {1} --highlight-line {2} | grep --color=always -e {cq} -e '$'\" --preview-window 25%"
+    else
+        cmd="rg --color=always --line-number $@ | sk --ansi --exact --delimiter ':' --preview \"bat --plain --color=always {1} --highlight-line {2} | grep --color=always -e \"$@\" -e '$'\" --preview-window 25%"
+    fi
+    eval $cmd | while read sel; do
         if [ ! -z "$sel" ] ; then
             xs=("${(@s/:/)sel}")  # splitt with `:`
             echo "$xs[1]"
-            e "$xs[1]"
-            e --eval "(with-current-buffer (window-buffer (selected-window)) (goto-line $xs[2]))" > /dev/null
+            e "$xs[1]" && e --eval "(with-current-buffer (window-buffer (selected-window)) (goto-line $xs[2]))" > /dev/null
         fi
     done
 }
 
-function gse {
-    local xs
-    git status -s $@ | peco | while read sel; do
+alias gss > /dev/null && unalias gss
+function gss {
+    local xs sel
+    git status -s | sed -e 's/^ /_/; s/^\(.\) /\1_/;' | sk -e --delimiter=' ' --preview='git diff {2} | diff-so-fancy --preview-window 25%' | cut -c 4- | while read sel; do
         if [ ! -z "$sel" ] ; then
-            xs=("${(@s/ /)sel}")  # splitt with ` `
-            echo "$xs[2]"
-            e "$xs[2]"
+            echo "$sel"
+            e "$sel"
         fi
     done
+}
+
+alias gcb > /dev/null && unalias gcb
+function gcb {
+    local key name branch
+    key=$1
+    shift 1
+    name=$(echo "$@" | sed -Ee 's|([^ ])([A-Z])|\1-\2|g; s| +|-|g; y/ABCDEFGHIJKLMNOPQRSTUVWXYZ./abcdefghijklmnopqrstuvwxyz-/; s|--|-|g;')
+    branch=${key}/${name}
+    echo $branch
+    git checkout -b $branch
+}
+
+alias gbb > /dev/null && unalias gbb
+function gbb {
+    local branch=$(git branch --color=always | sk --ansi | cut -c 3-)
+    if [ ! -z "$branch" ] ; then
+        git checkout $branch
+    fi
 }
 
 function ff {
-    find . -type f \! -iwholename '*/.git/*' -and -name \*$1\* | cut -c 3- | peco --select-1 --initial-index 1 | awk -F: '{print $1}' | while read file ; do
+    local cmd file
+    if [ -z "$1" ] ; then
+        cmd="sk --preview 'bat --plain --color=always {1}' --preview-window 25%"
+    else
+        cmd="find . -type f \! -iwholename '*/.git/*' -and -name \*$1\* | cut -c 3- | sk --preview 'bat --plain --color=always {1}' --preview-window 25%"
+    fi
+    eval $cmd | while read file; do
         if [ ! -z "$file" ] ; then
             echo "$file"
             e "$file"
@@ -138,7 +167,7 @@ function ff {
 }
 
 function cdd {
-    local dir=$(find . -type d \! -iwholename '*/.git/*' -and \! -name . | cut -c 3- | peco --select-1 --initial-index 1 | awk -F: '{print $1}')
+    local dir=$(sk --cmd-prompt='cd>' -i -c 'find . -type d -iname "*{}*"' --preview="exa --color=always {}" --preview-window 25%)
     if [ ! -z "$dir" ] ; then
         cd "$dir"
     fi
