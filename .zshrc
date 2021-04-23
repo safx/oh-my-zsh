@@ -138,9 +138,18 @@ function gcb {
 
 alias gbb > /dev/null && unalias gbb
 function gbb {
-    local branch=$(git branch --color=always | sk --ansi | cut -c 3-)
+    local branch=$(git branch --color=never -a --no-merged  | grep -Ev 'remotes/origin/[0-9]+/head' | awk '{r=$0;t=substr($0,3)} /remotes\/origin\//{t=substr(t,16); r="R " t} {print t "#" r}' | sk --delimiter '#' --with-nth=2 | awk -F'#' '{print $1}')
     if [ ! -z "$branch" ] ; then
+        echo $branch
         git checkout $branch
+    fi
+}
+
+function gbt {
+    local tag=$(git tag | sk )
+    if [ ! -z "$tag" ] ; then
+        echo $tag
+        git checkout $tag
     fi
 }
 
