@@ -80,7 +80,6 @@ which md5sum > /dev/null && alias md5='md5sum'
 alias f='open -a Finder'
 alias mp='$HOME/Applications/mpv.app/Contents/MacOS/mpv'
 alias cv='$HOME/Applications/cooViewer.app/Contents/MacOS/cooViewer'
-alias gifify='$HOME/.nodenv/versions/10.16.0/lib/node_modules/gifify/bin/gifify'
 alias v=vagrant
 alias aws-azure-login='aws-azure-login --no-prompt --all-profiles'
 
